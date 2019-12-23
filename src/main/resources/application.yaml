@@ -1,0 +1,47 @@
+# 停掉預設錯誤頁
+server:
+  error:
+    whitelabel.enabled: false
+  servlet.session.timeout: 1m
+  use-forward-headers: true
+  tomcat:
+    accept-count: 100
+    max-threads: 20000
+    remote-ip-header: X-Real-IP
+    protocol-header: X-Forwarded-Proto
+    accesslog:
+      pattern: "%{X-Forwarded-For}i %h %l %u %t %r %s %b %D"
+      enabled: true
+      file-date-format: .yyyy-MM-dd_HH
+
+# actuator : 對應用程式進行監控跟管理
+management:
+  server:
+    port: 10788 # 管理 actuator port
+  endpoints:
+    web:
+      exposure:
+        include: "shutdown"
+  endpoint:
+    shutdown:
+      enabled: true
+
+# DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+spring.datasource:  &datasource
+  url: "jdbc:oracle:thin:@127.0.0.1:1521:xe"
+  username: XXXX
+  password: XXXX
+  driver-class-name: oracle.jdbc.driver.OracleDriver
+  hikari.maximumPoolSize: 100
+  hikari.connectionTimeout: 30000 # Default: 30000 (30 seconds)
+  hikari.idleTimeout: 600000 # Default: 600000 (10 minutes)
+  hikari.maxLifetime: 1800000 # Default: 1800000 (30 minutes)
+  hikari.minimumIdle: 100 # Default: same as maximumPoolSize
+
+# redis config
+spring:
+  redis:
+    host: xxx.redis.cache.windows.net
+    port: 6380
+    password: XXXX
+    ssl: true
